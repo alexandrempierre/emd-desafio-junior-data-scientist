@@ -208,3 +208,23 @@ WHERE
 GROUP BY
   v.evento
 LIMIT 10;
+/*
+9. Qual evento teve a maior média diária de chamados abertos desse subtipo?
+Resposta: Rock in Rio com aproximadamente 119 chamados por dia de evento.
+*/
+SELECT
+  v.evento
+  ,COUNT(DISTINCT ch.id_chamado) / COUNT(DISTINCT EXTRACT(DATE FROM ch.data_inicio)) AS qtde_chamados
+FROM
+  `datario.administracao_servicos_publicos.chamado_1746` AS ch
+  INNER JOIN
+    `datario.turismo_fluxo_visitantes.rede_hoteleira_ocupacao_eventos` AS v ON (
+      EXTRACT(DATE FROM ch.data_inicio) BETWEEN v.data_inicial AND v.data_final
+    )
+WHERE
+  ch.subtipo = "Perturbação do sossego"
+GROUP BY
+  v.evento
+ORDER BY
+  COUNT(DISTINCT ch.id_chamado) / COUNT(DISTINCT EXTRACT(DATE FROM ch.data_inicio)) DESC
+LIMIT 1;
