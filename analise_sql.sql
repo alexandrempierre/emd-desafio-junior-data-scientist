@@ -3,7 +3,7 @@
 Resposta: 73 chamados (contados via id_chamado único) abertos em 01/04/2023
 */
 SELECT
-  COUNT(DISTINCT id_chamado) AS contagem_chamados -- sem o DISTINCT o resultado é o mesmo
+  COUNT(DISTINCT id_chamado) AS contagem_chamados
 FROM `datario.administracao_servicos_publicos.chamado_1746`
 WHERE
   data_particao = '2023-04-01'
@@ -33,7 +33,7 @@ Resposta: Engenho de Dentro, Leblon, Campo Grande
 SELECT
   ch.id_bairro
   ,ANY_VALUE(b.nome) AS nome_bairro
-  ,COUNT(ch.id_chamado) AS contagem_chamados -- sem o DISTINCT o resultado é o mesmo
+  ,COUNT(ch.id_chamado) AS contagem_chamados
 FROM
   `datario.administracao_servicos_publicos.chamado_1746` AS ch
   INNER JOIN `datario.dados_mestres.bairro` AS b ON (ch.id_bairro = b.id_bairro)
@@ -52,7 +52,7 @@ Resposta: Zona Norte
 SELECT
   ch.id_bairro
   ,ANY_VALUE(b.subprefeitura) AS nome_subprefeitura
-  ,COUNT(ch.id_chamado) AS contagem_chamados -- sem o DISTINCT o resultado é o mesmo
+  ,COUNT(ch.id_chamado) AS contagem_chamados
 FROM
   `datario.administracao_servicos_publicos.chamado_1746` AS ch
   INNER JOIN `datario.dados_mestres.bairro` AS b ON (ch.id_bairro = b.id_bairro)
@@ -69,7 +69,6 @@ LIMIT 1;
 Resposta: Existe uma reclamação sem bairro nem subprefeitura associados. O subtipo da reclamação é "Verificação de ar condicionado inoperante no ônibus", esse tipo de reclamação não parece precisar estar associado a um endereço específico, portanto não existe nenhuma informação de logradouro, bairro nem subprefeitura.
 */
 SELECT
-  --*
   subtipo
 FROM
   `datario.administracao_servicos_publicos.chamado_1746`
