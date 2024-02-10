@@ -176,12 +176,26 @@ WHERE
 LIMIT 10;
 /*
 7. Selecione os chamados com esse subtipo que foram abertos durante os eventos contidos na tabela de eventos (Reveillon, Carnaval e Rock in Rio).
+Resposta: 
+*/
+SELECT
+  v.evento
+  ,ch.*
+FROM
+  `datario.administracao_servicos_publicos.chamado_1746` AS ch
+  INNER JOIN
+    `datario.turismo_fluxo_visitantes.rede_hoteleira_ocupacao_eventos` AS v ON (
+      EXTRACT(DATE FROM ch.data_inicio) BETWEEN v.data_inicial AND v.data_final
+    )
+WHERE
+  ch.subtipo = "Perturbação do sossego"
+LIMIT 2000;
+/*
+8. Quantos chamados desse subtipo foram abertos em cada evento?
 Resposta: 137 chamados no Reveillon, 241 no Carnaval e 834 no Rock in Rio.
 */
 SELECT
   v.evento
-  --,v.data_inicial
-  --,v.data_final
   ,COUNT(DISTINCT ch.id_chamado) AS qtde_chamados
 FROM
   `datario.administracao_servicos_publicos.chamado_1746` AS ch
@@ -193,6 +207,4 @@ WHERE
   ch.subtipo = "Perturbação do sossego"
 GROUP BY
   v.evento
-  --,v.data_inicial
-  --,v.data_final
 LIMIT 10;
