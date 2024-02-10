@@ -146,3 +146,31 @@ WHERE
   data_particao = '2023-04-01'
   AND FORMAT_DATETIME("%F", data_inicio) = "2023-04-01"
   AND id_bairro IS NULL;
+  /*
+6. Quantos chamados com o subtipo "Perturbação do sossego" foram abertos desde 01/01/2022 até 31/12/2023 (incluindo extremidades)?
+Resposta: 42408 chamados de perturbação do sossego.
+*/
+-- partições em que estão os dados que queremos
+SELECT
+  data_particao
+FROM
+  `datario.administracao_servicos_publicos.chamado_1746`
+WHERE
+  EXTRACT(DATE FROM data_inicio) BETWEEN "2022-01-01" AND "2023-12-31"
+GROUP BY
+  data_particao
+HAVING
+  COUNT(data_inicio) > 0
+ORDER BY
+  data_particao ASC
+LIMIT 1000;
+-- resposta à pergunta 6
+SELECT
+  COUNT(DISTINCT id_chamado) AS qtde_chamados
+FROM
+  `datario.administracao_servicos_publicos.chamado_1746`
+WHERE
+  data_particao BETWEEN "2022-01-01" AND "2023-12-31"
+  AND EXTRACT(DATE FROM data_inicio) BETWEEN "2022-01-01" AND "2023-12-31"
+  AND subtipo = "Perturbação do sossego"
+LIMIT 10;
