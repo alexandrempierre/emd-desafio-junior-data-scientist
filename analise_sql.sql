@@ -228,3 +228,28 @@ GROUP BY
 ORDER BY
   COUNT(DISTINCT ch.id_chamado) / COUNT(DISTINCT EXTRACT(DATE FROM ch.data_inicio)) DESC
 LIMIT 1;
+/*
+10. Compare as médias diárias de chamados abertos desse subtipo durante os eventos específicos (Reveillon, Carnaval e Rock in Rio) e a média diária de chamados abertos desse subtipo considerando todo o período de 01/01/2022 até 31/12/2023.
+Resposta: Rock in Rio (aproximadamente 119 chamados por dia) e Carnaval (por volta de 60 chamados por dia) tem mais chamados que a média diária do período (em torno de 52 por dia), já o Reveillon (quase 46 chamados por dia) tem menos.
+*/
+SELECT
+  v.evento
+  ,COUNT(DISTINCT ch.id_chamado) / COUNT(DISTINCT EXTRACT(DATE FROM ch.data_inicio)) AS media_diaria_chamados
+FROM
+  `datario.administracao_servicos_publicos.chamado_1746` AS ch
+  INNER JOIN
+    `datario.turismo_fluxo_visitantes.rede_hoteleira_ocupacao_eventos` AS v ON (
+      EXTRACT(DATE FROM ch.data_inicio) BETWEEN v.data_inicial AND v.data_final
+    )
+WHERE
+  ch.subtipo = "Perturbação do sossego"
+GROUP BY
+  v.evento
+UNION ALL
+SELECT
+  "Período de 01/01/2022 a 31/12/2023" AS evento
+  ,COUNT(DISTINCT id_chamado) / COUNT(DISTINCT EXTRACT(DATE FROM data_inicio)) AS media_diaria_chamados
+FROM
+  `datario.administracao_servicos_publicos.chamado_1746`
+WHERE
+  subtipo = "Perturbação do sossego";
