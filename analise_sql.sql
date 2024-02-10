@@ -130,7 +130,7 @@ Resposta: Rock in Rio com aproximadamente 119 chamados por dia de evento.
 */
 SELECT
   v.evento
-  ,COUNT(DISTINCT ch.id_chamado) / COUNT(DISTINCT EXTRACT(DATE FROM ch.data_inicio)) AS qtde_chamados
+  ,COUNT(DISTINCT ch.id_chamado) / COUNT(DISTINCT EXTRACT(DATE FROM ch.data_inicio)) AS media_diaria_chamados
 FROM
   `datario.administracao_servicos_publicos.chamado_1746` AS ch
   INNER JOIN
