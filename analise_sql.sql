@@ -116,3 +116,33 @@ GROUP BY
 ORDER BY
   COUNT(ch.id_chamado) DESC
 LIMIT 1;
+/*
+5. Existe algum chamado aberto nesse dia que não foi associado a um bairro ou subprefeitura na tabela de bairros? Se sim, por que isso acontece?
+Resposta: Existe uma reclamação sem bairro nem subprefeitura associados. O subtipo da reclamação é "Verificação de ar condicionado inoperante no ônibus", esse tipo de reclamação não parece precisar estar associado a um endereço específico, portanto não existe nenhuma informação de logradouro, bairro nem subprefeitura.
+*/
+-- contagem de quantos chamados com essa característica existem
+SELECT
+  ch.id_bairro
+  ,COUNT(ch.id_chamado) AS contagem_chamados -- sem o DISTINCT o resultado é o mesmo
+FROM
+  `datario.administracao_servicos_publicos.chamado_1746` AS ch
+  LEFT JOIN `datario.dados_mestres.bairro` AS b ON (ch.id_bairro = b.id_bairro)
+WHERE
+  data_particao = '2023-04-01'
+  AND FORMAT_DATETIME("%F", data_inicio) = "2023-04-01"
+  AND b.id_bairro IS NULL
+GROUP BY
+  ch.id_bairro
+ORDER BY
+  COUNT(ch.id_chamado) DESC
+LIMIT 100;
+--
+SELECT
+  --*
+  subtipo
+FROM
+  `datario.administracao_servicos_publicos.chamado_1746`
+WHERE
+  data_particao = '2023-04-01'
+  AND FORMAT_DATETIME("%F", data_inicio) = "2023-04-01"
+  AND id_bairro IS NULL;
