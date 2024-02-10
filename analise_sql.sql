@@ -85,3 +85,34 @@ GROUP BY
 ORDER BY
   COUNT(ch.id_chamado) DESC
 LIMIT 3;
+/*
+4. Qual o nome da subprefeitura com mais chamados abertos nesse dia?
+Resposta: Zona Norte
+*/
+-- verificação se há mais de uma subprefeitura para algum id_bairro -- não há
+SELECT
+  b.id_bairro
+  ,COUNT(DISTINCT b.subprefeitura) AS contagem_subprefeituras
+FROM
+  `datario.dados_mestres.bairro` AS b
+GROUP BY
+  b.id_bairro
+HAVING
+  COUNT(DISTINCT b.subprefeitura) > 1
+LIMIT 100;
+-- resposta à pergunta 4
+SELECT
+  ch.id_bairro
+  ,ANY_VALUE(b.subprefeitura) AS nome_subprefeitura
+  ,COUNT(ch.id_chamado) AS contagem_chamados -- sem o DISTINCT o resultado é o mesmo
+FROM
+  `datario.administracao_servicos_publicos.chamado_1746` AS ch
+  INNER JOIN `datario.dados_mestres.bairro` AS b ON (ch.id_bairro = b.id_bairro)
+WHERE
+  data_particao = '2023-04-01'
+  AND FORMAT_DATETIME("%F", data_inicio) = "2023-04-01"
+GROUP BY
+  ch.id_bairro
+ORDER BY
+  COUNT(ch.id_chamado) DESC
+LIMIT 1;
