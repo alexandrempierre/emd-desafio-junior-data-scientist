@@ -26,3 +26,31 @@ WHERE
   data_particao = '2023-04-01'
   AND FORMAT_DATETIME("%F", data_inicio) = "2023-04-01"
 LIMIT 1;
+/*
+2. Qual o tipo de chamado que teve mais reclamações no dia 01/04/2023?
+Resposta: Poluição sonora (id_tipo = 1393) com 24 chamados
+*/
+-- verificando se cada id_tipo está associado a mais de um tipo -- não está
+SELECT
+  id_tipo
+  ,COUNT(DISTINCT tipo) AS count_tipo
+FROM `datario.administracao_servicos_publicos.chamado_1746`
+GROUP BY
+  id_tipo
+HAVING
+  COUNT(DISTINCT tipo) > 1
+LIMIT 100;
+-- respondendo à pergunta 2
+SELECT
+  id_tipo
+  ,ANY_VALUE(tipo) AS tipo
+  ,COUNT(id_chamado) AS contagem_chamados
+FROM `datario.administracao_servicos_publicos.chamado_1746`
+WHERE
+  data_particao = '2023-04-01'
+  AND FORMAT_DATETIME("%F", data_inicio) = "2023-04-01"
+GROUP BY
+  id_tipo
+ORDER BY
+  COUNT(DISTINCT id_chamado) DESC
+LIMIT 1;
