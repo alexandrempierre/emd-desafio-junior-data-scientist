@@ -1,0 +1,8 @@
+# venv
+.venv/
+
+# python
+*.py[cio]
+
+# python_dotenv
+.env
