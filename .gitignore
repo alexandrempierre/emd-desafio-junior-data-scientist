@@ -6,3 +6,13 @@
 
 # python_dotenv
 .env
+
+# python
+*.py[oic]
+__pycache__/
+
+# data
+*.parquet
+
+# streamlit
+.streamlit/
